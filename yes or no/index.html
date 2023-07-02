@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>yes or no</title>
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: rgb(54, 47, 47);
+        }
+        input{
+            background-color: transparent;
+            border: 1px solid;
+            color: rgb(214, 212, 241);
+            font-size: large;
+            padding: 10px;
+            width: 500px;
+        }
+
+        input:focus{
+            border: 3px solid;
+            border-color: rgb(126, 120, 230);
+            outline: none;
+        }
+
+        .d-flex{
+            display: flex;
+        }
+        .justify-center{
+            justify-self: center;
+        }
+        .flex-col{
+            flex-direction: column;
+        }
+        .align-center{
+            align-items: center;
+
+        }
+        .hide{
+            display: none;
+        }
+        .img-container{
+            position: relative;
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #answer-text{
+            position: absolute;
+            top: 30%;
+            color: white;
+            text-transform: uppercase;
+        }
+    </style>
+
+
+
+
+
+
+</head>
+<body>
+    <form class="d-flex flex-col align-center">
+        <label for="task">
+            <h1>Can't decide bro? Let us help ya!</h1>
+        </label>
+
+        <input type="text" id="task" placeholder="As me a question...">
+    </form>
+
+    <section class="img-container">
+        <article id="thinking" class="hide">
+            <h1>let me think...</h1>
+        </article>
+
+
+        <article id="img-article"></article>
+
+        <h1 id="answer-text"></h1>
+    </section>
+
+
+
+
+
+
+
+
+    <script>
+        const wtfUrl = `https://yesno.wtf/api`;
+
+        const imgArticle = document.getElementById("img-article");
+        const ansTest =document.getElementById("answer-text");
+        const thinkingAticle = document.getElementById("thinking")
+
+        function showthinking(){
+            thinkingAticle.classList.remove("hide");
+        }
+        function hidethinking(){
+            thinkingAticle.classList.add("hide");
+        }
+
+
+        function decide(event) {
+            event.preventDefault();
+
+            imgArticle.innerHTML = "";
+            ansTest.innerHTML = "";
+
+            showthinking();
+
+            fetch(wtfUrl, {
+                method: 'Get',
+                headers: {
+                    'accept': 'application/joson',
+                }
+            }).then(async (response)=> {
+                const result =await response.json();
+
+                const img = document.createElement("img");
+                img.setAttribute('src', result.image)
+
+                imgArticle.appendChild(img);
+
+                ansTest.textContent = result.answer;
+
+                hidethinking();
+            })
+        }
+
+        document.querySelector('form').addEventListener('submit', decide);
+    </script>
+</body>
+</html>
